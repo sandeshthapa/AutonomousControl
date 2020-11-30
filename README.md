@@ -1,16 +1,22 @@
 ## AutonomousControl
 
-This is my personal repo of control and planning algorithms for autonomous flight 
+This is my personal repo of control, planning and estimation algorithms for autonomous flight 
+## Control Algorithms
 
-## PID Control 
-## LQR Control 
-## Geometric Control 
-## Adaptive Control 
-## Robust Control 
+### PID Control 
+### LQR Control 
+### Geometric Control 
+### Adaptive Control 
+### Robust Control 
+### Simulation in ROS/Gazebo 
+### PX4 SITL 
+### MAVROS Controllers
 
+## Planning Algorithms 
 
-## Simulation in ROS/Gazebo 
+### Minimum Snap 
 
-## PX4 SITL 
+## Estimation 
 
-## MAVROS Controllers
+### EKF 
+
