@@ -16,10 +16,12 @@ State_Dependent_LQR::~State_Dependent_LQR()
     }
 
 /**
- * This functions computesia the inertia matrix for a given mass and arm lenght, for details view: 
+ * This functions computes the inertia matrix for a given mass and arm lenght, for details view: 
  * Reference: 
  * 1. Flightmare: A Flexible Quadrotor Simulator, 
  *    Song, Yunlong and Naji, Selim and Kaufmann, Elia and Loquercio, Antonio and Scaramuzza, Davide
+ * 2. Quadrotor Dynamics and Control, Randy Beard, BYU 
+ * 3. Geometric Control of UAV on SE(3)
  * @param mass 
  * @param arm_length
  * @return none 
