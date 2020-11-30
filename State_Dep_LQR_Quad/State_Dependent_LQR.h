@@ -1,7 +1,6 @@
 #ifndef STATE_DEPENDENT_lQR
 #define STATE_DEPENDENT_lQR
 
-// #include "care_solver.h"
 #include <eigen3/Eigen/Core>
 #include <eigen3/Eigen/Dense>
 #include <eigen3/Eigen/Eigenvalues>
@@ -17,20 +16,32 @@
 using namespace Eigen;
 using namespace std; 
 
-
 class State_Dependent_LQR
 {
 private:
-    /* data */
+    double mass;
+    double arm_len; 
+    double I_xx; 
+    double I_yy; 
+    double I_zz; 
 public:
-    State_Dependent_LQR(/* args */);
-    ~State_Dependent_LQR();
-    struct care_solver; 
 
-    double mass = 2.8; //0.865 ; // [kg]
-    double I_xx = 0.0551;
-    double I_yy = 0.0551; //
-    double I_zz = 0.0858; //
+   
+
+    // Constructor
+    State_Dependent_LQR(double mass_, double arm_len_);
+
+    // Destrcutor
+    ~State_Dependent_LQR();
+
+    void setinertialparams(double mass_, double arm_len_); 
+
+    struct care_solver; 
+     double gravity; 
+    // double mass = 2.8; //0.865 ; // [kg]
+    // double I_xx = 0.0551;
+    // double I_yy = 0.0551; //
+    // double I_zz = 0.0858; //
 
     care_solver care_soln(const MatrixXd &A, const MatrixXd &B, const MatrixXd &Q,const MatrixXd &R );
 

@@ -1,17 +1,41 @@
+// Nov 2020. Sandesh Thapa, thapasandesh1@gmail.com
+
 #include "State_Dependent_LQR.h"
 
-/**
- * 
- * 
- */
-State_Dependent_LQR::State_Dependent_LQR(/* args */)
-    {
-    }
+State_Dependent_LQR::State_Dependent_LQR(double mass_, double arm_len_)
+      : mass(mass_), 
+        arm_len (arm_len_), 
+        I_xx (0.0),
+        I_yy  (0.0), 
+        I_zz (0.0), 
+        gravity (9.81)
+   {} 
 
 State_Dependent_LQR::~State_Dependent_LQR() 
     {
     }
 
+/**
+ * This functions computesia the inertia matrix for a given mass and arm lenght, for details view: 
+ * Reference: 
+ * 1. Flightmare: A Flexible Quadrotor Simulator, 
+ *    Song, Yunlong and Naji, Selim and Kaufmann, Elia and Loquercio, Antonio and Scaramuzza, Davide
+ * @param mass 
+ * @param arm_length
+ * @return none 
+ * @author Sandesh Thapa
+ */
+void State_Dependent_LQR::setinertialparams(double mass_, double arm_len_)
+{
+    I_xx = mass_/12*arm_len_*arm_len_*4.5; 
+
+    std::cout << "Ixx" << I_xx << std::endl; 
+
+    I_yy = mass_/12*arm_len_*arm_len_*4.5; 
+
+    I_zz = mass_/12*arm_len_*arm_len_*7; 
+
+} 
 
 /**
  *  This functions returns the solution of continuous time algebraic recatti equation
@@ -20,6 +44,7 @@ State_Dependent_LQR::~State_Dependent_LQR()
  * @param Q; 
  * @param R; 
  * @return Soln.K , Soln.X; // K is the controller gain and X is the solution to CARE
+ * @author Sandesh Thapa, thapasandesh1@gmail.com
  */ 
 State_Dependent_LQR::care_solver  State_Dependent_LQR::care_soln(const MatrixXd &A, const MatrixXd &B, const MatrixXd &Q,const MatrixXd &R )
 {
@@ -82,6 +107,24 @@ State_Dependent_LQR::care_solver  State_Dependent_LQR::care_soln(const MatrixXd 
 
 }
 
+/**
+ *  This functions returns the A matrix for quadrotor UAV for details view the following references: 
+ * 1. Bouabdallah, S., Noth, A., & Siegwart, R. (2004, September).
+ *    PID vs LQ control techniques applied to an indoor micro quadrotor.
+ *    In 2004 IEEE/RSJ International Conference on Intelligent Robots and Systems
+ *    (IROS)(IEEE Cat. No. 04CH37566) (Vol. 3, pp. 2451-2456). IEEE.
+ * 2. Bouabdallah, S., & Siegwart, R. (2007, October). Full control of a quadrotor.
+ *     In 2007 IEEE/RSJ International Conference on Intelligent Robots and Systems (pp. 153-158). Ieee.
+ * 3. Flightmare: A Flexible Quadrotor Simulator, 
+ *    Song, Yunlong and Naji, Selim and Kaufmann, Elia and Loquercio, Antonio and Scaramuzza, Davide
+ * 4. Foehn, P., & Scaramuzza, D. (2018, May). Onboard state dependent lqr for agile quadrotors.
+ *    In 2018 IEEE International Conference on Robotics and Automation (ICRA) (pp. 6566-6572). IEEE.
+ * @param state_estimate The current state estimate either coming from EKF or ground thrusth (pose, twist)
+ * x,y,z,q.w,q.x, q.y, q,z, xdot, ydot, zdot, p,q,r
+ * @param U Current previous control input
+ * @return A matrix for Xdot = Ax + Bu; 
+ * @author Sandesh Thapa, thapasandesh1@gmail.com
+ */ 
  Eigen::Matrix<double, 12, 12> State_Dependent_LQR::A_LQR(   
       const Eigen::Matrix<double, 13, 1> & state_estimate, 
       const Eigen::Matrix<double, 4, 1> & u)
@@ -95,6 +138,11 @@ State_Dependent_LQR::care_solver  State_Dependent_LQR::care_soln(const MatrixXd 
     q.x() = state_estimate(4); 
     q.y() = state_estimate(5); 
     q.z() = state_estimate(6); 
+
+    // double _mass = 0.865; 
+    // double _arm_len = 0.17; 
+
+    setinertialparams( mass, arm_len);
     
     Eigen::Matrix<double, 3,1> Euler_ang = quaternionToEulerAnglesZYX(q); 
     // Euler_ang.setZero(); 
@@ -178,6 +226,24 @@ State_Dependent_LQR::care_solver  State_Dependent_LQR::care_soln(const MatrixXd 
 }
 
 
+/**
+ *  This functions returns the B matrix for quadrotor UAV for details view the following references: 
+ * 1. Bouabdallah, S., Noth, A., & Siegwart, R. (2004, September).
+ *    PID vs LQ control techniques applied to an indoor micro quadrotor.
+ *    In 2004 IEEE/RSJ International Conference on Intelligent Robots and Systems
+ *    (IROS)(IEEE Cat. No. 04CH37566) (Vol. 3, pp. 2451-2456). IEEE.
+ * 2. Bouabdallah, S., & Siegwart, R. (2007, October). Full control of a quadrotor.
+ *     In 2007 IEEE/RSJ International Conference on Intelligent Robots and Systems (pp. 153-158). Ieee.
+ * 3. Flightmare: A Flexible Quadrotor Simulator, 
+ *    Song, Yunlong and Naji, Selim and Kaufmann, Elia and Loquercio, Antonio and Scaramuzza, Davide
+ * 4. Foehn, P., & Scaramuzza, D. (2018, May). Onboard state dependent lqr for agile quadrotors.
+ *    In 2018 IEEE International Conference on Robotics and Automation (ICRA) (pp. 6566-6572). IEEE.
+ * @param state_estimate The current state estimate either coming from EKF or ground thrusth (pose, twist)
+ * x,y,z,q.w,q.x, q.y, q,z, xdot, ydot, zdot, p,q,r
+ * @param U Current previous control input
+ * @return B matrix for Xdot = Ax + Bu; 
+ * @author Sandesh Thapa, thapasandesh1@gmail.com
+ */ 
  Eigen::Matrix<double, 12, 4> State_Dependent_LQR::B_LQR(   
         const Eigen::Matrix<double, 13, 1> & state_estimate, 
         const Eigen::Matrix<double, 4, 1> & u)
@@ -202,6 +268,11 @@ State_Dependent_LQR::care_solver  State_Dependent_LQR::care_soln(const MatrixXd 
     Eigen::Matrix<double, 12, 4> B;
     B.setZero();
 
+    // double _mass = 0.865; 
+    // double _arm_len = 0.17; 
+
+   setinertialparams( mass, arm_len);
+
     B(6,0)    = (sin(phi)*sin(psi) + cos(phi)*cos(psi)*sin(theta))/mass; 
     B(7,0)    = -(sin(phi)*cos(psi) + cos(phi)*sin(psi)*sin(theta))/mass; 
     B(8,0)    = cos(phi)*cos(theta)/mass; 
@@ -214,6 +285,27 @@ State_Dependent_LQR::care_solver  State_Dependent_LQR::care_soln(const MatrixXd 
 }
 
 
+/**
+ *  This functions solves the State Dependent LQR for current A and B matrix in real time
+ *    for quadrotor UAV for details view the following references: 
+ * 1. Bouabdallah, S., Noth, A., & Siegwart, R. (2004, September).
+ *    PID vs LQ control techniques applied to an indoor micro quadrotor.
+ *    In 2004 IEEE/RSJ International Conference on Intelligent Robots and Systems
+ *    (IROS)(IEEE Cat. No. 04CH37566) (Vol. 3, pp. 2451-2456). IEEE.
+ * 2. Bouabdallah, S., & Siegwart, R. (2007, October). Full control of a quadrotor.
+ *     In 2007 IEEE/RSJ International Conference on Intelligent Robots and Systems (pp. 153-158). Ieee.
+ * 3. Flightmare: A Flexible Quadrotor Simulator, 
+ *    Song, Yunlong and Naji, Selim and Kaufmann, Elia and Loquercio, Antonio and Scaramuzza, Davide
+ * 4. Foehn, P., & Scaramuzza, D. (2018, May). Onboard state dependent lqr for agile quadrotors.
+ *    In 2018 IEEE International Conference on Robotics and Automation (ICRA) (pp. 6566-6572). IEEE.
+ * @param state_estimate The current state estimate either coming from EKF or ground thrusth (pose, twist)
+ *  state_estimate = x,y,z,q.w,q.x, q.y, q,z, xdot, ydot, zdot, p,q,r
+ *  @param reference_state The desired state to go for the quad 
+ *  des_state = x,y,z,q.w,q.x, q.y, q,z, xdot, ydot, zdot, p,q,r
+ * @param U Current previous control input
+ * @return ULQR Control matrix for Xdot = Ax + Bu; 
+ * @author Sandesh Thapa, thapasandesh1@gmail.com
+ */ 
 Eigen::Matrix<double, 4,1> State_Dependent_LQR::compute_Ulqr_12_states( const Eigen::Matrix<double, 13, 1> &reference_state,
                                                                             const Eigen::Matrix<double, 13, 1> & state_estimate )
 {
@@ -223,8 +315,15 @@ Eigen::Matrix<double, 4,1> State_Dependent_LQR::compute_Ulqr_12_states( const Ei
 
   Eigen::Matrix<double, 4, 1> Uref; 
   Uref.setZero(); 
+
+  //  double _mass = 0.865; 
+  //  double _arm_len = 0.17; 
+
+   setinertialparams( mass, arm_len);
+
+   std::cout << "Ixx" << I_xx << std::endl; 
  
-  Uref(0) = mass*9.81;  
+  Uref(0) = mass*gravity;  
 
   // Solve the the lQ gain 
 
@@ -375,9 +474,19 @@ Eigen::Matrix<double, 4,1> State_Dependent_LQR::compute_Ulqr_12_states( const Ei
 
 std::cout << "LQ Gain" << lqr_soln_.K << std::endl; 
 
+std::cout << "U" << Ulqr << std::endl; 
+
   return Ulqr; 
 }
 
+/**
+ * This  functions converts the current quaternion orientation to Euler angles in ZYX order 
+ * For reference view: 
+ * https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles
+ * @param q Current quaternion pose
+ * @return Euler_angles XYZ order
+ * @author Sandesh Thapa, thapasandesh1@gmail.com
+ */
 Eigen::Vector3d State_Dependent_LQR::quaternionToEulerAnglesZYX(const Eigen::Quaterniond& q)
 {
   Eigen::Vector3d euler_angles;
@@ -411,15 +520,25 @@ Eigen::Vector3d State_Dependent_LQR::quaternionToEulerAnglesZYX(const Eigen::Qua
 int main()
 {
    // Do State Dependent LQR here 
-   State_Dependent_LQR lqr; 
+  double _mass = 0.73; 
+  double _arm_len = 0.17;
+
+   State_Dependent_LQR lqr(_mass, _arm_len); 
+   lqr.setinertialparams( _mass, _arm_len);
 
    Eigen::Matrix<double, 13, 1> reference_state_ ;  
    reference_state_.setZero(); 
+   reference_state_(0) = 0.0; 
+   reference_state_(1) = 0.0; 
+   reference_state_(2) = 0.0; 
 
    Eigen::Matrix<double, 13, 1> state_estimate_ ; 
-   state_estimate_.setZero(); 
+   state_estimate_.setZero();
+   state_estimate_(0) = 0.0;  
 
     Eigen::Matrix<double, 4,1> ULQR_12 = lqr.compute_Ulqr_12_states(reference_state_,state_estimate_);
+
+    std::cout << "Current U: " << ULQR_12 << std::endl; 
 
 
     return 0; 
