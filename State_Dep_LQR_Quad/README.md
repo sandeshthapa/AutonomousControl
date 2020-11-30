@@ -4,6 +4,9 @@
 
 ## Compling and runing the algorithm
 
+### Dependencies 
+Eigen 
+
 ### Install 
 Clone the repository 
 ```
