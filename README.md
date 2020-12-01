@@ -20,7 +20,7 @@ Eigen
 #### Install 
 Clone the repository 
 ```
-git@github.com:sandeshthapa/AutonomousControl.git
+git clone git@github.com:sandeshthapa/AutonomousControl.git
 cd ~/AutonomousControl/State_Dep_LQR_Quad/
 g++ -std=c++11 -o test State_Dependent_LQR.cpp 
 ./test
