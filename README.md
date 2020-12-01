@@ -39,7 +39,21 @@ g++ -std=c++11 -o test State_Dependent_LQR.cpp
 
 1. EKF 
 
+## Build issues:
+fatal error: Eigen/Dense: No such file or directory
+Add 
+```
+#include <eigen3/Eigen/Core>
+```
+instead of
+```
+#include <Eigen/Core>
+```
 
+Or compile with 
+```
+g++ -I /usr/local/include/eigen3 myfile.cpp -o filetest
+```
 
 ### Contact 
 thapasandesh1@gmail.com
