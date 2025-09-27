@@ -10,6 +10,7 @@ This is my personal repo of control, planning and estimation algorithms for auto
 4. Adaptive Control 
 5. Robust Control 
 6.  Model Predictive Control
+7.  Estimation/Filtering Libary
 
 ## <a name="lqr"></a>LQR_Control
 
