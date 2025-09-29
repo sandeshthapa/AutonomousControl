@@ -2,6 +2,8 @@
 
 This is my personal repo of control, planning and estimation algorithms for autonomous flight 
 
+## Vehicle Dynamics and Modeling
+
 ## Control Algorithms
 
 1. PID Control 
