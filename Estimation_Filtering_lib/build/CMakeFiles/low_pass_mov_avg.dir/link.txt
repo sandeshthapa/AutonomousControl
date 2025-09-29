@@ -1,1 +1,0 @@
-/usr/bin/cc CMakeFiles/low_pass_mov_avg.dir/moving_average.c.o CMakeFiles/low_pass_mov_avg.dir/filter_lib.c.o -o low_pass_mov_avg 
