@@ -9,8 +9,8 @@ This is my personal repo of control, planning and estimation algorithms for auto
 3. Geometric Control 
 4. Adaptive Control 
 5. Robust Control 
-6.  Model Predictive Control
-7.  Estimation/Filtering Libary
+6. Model Predictive Control
+7. [Estimation and Filtering Libary](#est_filt_lib)
 
 ## <a name="lqr"></a>LQR_Control
 
@@ -37,9 +37,22 @@ g++ -std=c++11 -o test State_Dependent_LQR.cpp
 
 1. Minimum Snap 
 
-## Estimation 
+## <b name="est_filt_lib"></b>Estimation and Filtering Library
 
 1. EKF 
+
+### Build using bash scripts 
+```
+cd AutonomousControl/Estimation_Filtering_lib
+chmod +x build.sh run.sh
+
+```
+
+#### Run using bash scripts 
+```
+cd AutonomousControl/Estimation_Filtering_lib
+./build.sh 
+./run.sh
 
 ## Build issues:
 fatal error: Eigen/Dense: No such file or directory
