@@ -40,3 +40,6 @@
 *.vscode
 # Ignore build directory
 /build/
+*/build/*
+*/*/build/*
+*/.vscode
