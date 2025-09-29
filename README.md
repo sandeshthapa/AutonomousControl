@@ -39,7 +39,7 @@ g++ -std=c++11 -o test State_Dependent_LQR.cpp
 
 ## <b name="est_filt_lib"></b>Estimation and Filtering Library
 
-1. EKF 
+1. Low pass and moving average filters
 
 ### Build using bash scripts 
 ```
