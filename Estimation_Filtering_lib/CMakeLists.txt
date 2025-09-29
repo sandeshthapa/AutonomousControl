@@ -1,11 +1,9 @@
-cmake_minimum_required(VERSION 4.0)
-project(decode_CAN)
+cmake_minimum_required(VERSION 3.10)
+project(estimation_filtering C)
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_C_STANDARD 11)   # or 17 if you like
 
-add_executable(decode_CAN main.cpp
-       #can_msg.c
-      #can_msg.h
-      #moving_average.c
-        filter_lib.c)
-        #moving_avg_v1.c)
+add_executable(low_pass_mov_avg
+    moving_average.c          # <-- your file with int main()
+    filter_lib.c    # <-- implementation of your filter
+)
